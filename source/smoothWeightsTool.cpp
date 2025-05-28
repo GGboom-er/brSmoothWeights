@@ -687,6 +687,8 @@ smoothWeightsContext::smoothWeightsContext()
     // the brush settings. It's used to control whether undo/redo needs
     // to get called.
     performBrush = false;
+    
+    normalizeState = 1;
 }
 
 
@@ -976,6 +978,12 @@ MStatus smoothWeightsContext::doPressCommon(MEvent event)
         else
             getAllWeights();
     }
+    
+    // Turn off normalization for the skin cluster since the smoothed
+    // weights will be automatically normalized and Maya 2026 will
+    // produce a warning otherwise.
+    smoothWeightsContext::setNormalizeWeights(skinObj, 0, normalizeState);
+    
     return status;
 }
 
@@ -1193,6 +1201,9 @@ void smoothWeightsContext::doReleaseCommon(MEvent event)
 
         cmd->finalize();
     }
+    
+    // Return to the previous normalization state.
+    smoothWeightsContext::setNormalizeWeights(skinObj, normalizeState, normalizeState);
 }
 
 
@@ -3160,6 +3171,26 @@ double smoothWeightsContext::averageEdgeLength(MIntArray edges)
     }
 
     return length;
+}
+
+MStatus smoothWeightsContext::setNormalizeWeights(MObject skinCluster, int value, int &prevState)
+{
+    MStatus status;
+
+    MFnDependencyNode depNodeFn(skinCluster, &status);
+    if (!status)
+        return status;
+
+    MPlug normalizePlug = depNodeFn.findPlug("normalizeWeights", true, &status);
+    if (!status)
+        return status;
+    
+    status = normalizePlug.getValue(prevState);
+    if (!status)
+        return status;
+
+    status = normalizePlug.setInt(value);
+    return status;
 }
 
 

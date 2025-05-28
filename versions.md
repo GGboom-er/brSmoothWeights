@@ -1,3 +1,10 @@
+**1.2.1 (2025-05-28)**
+* Added support for Maya 2026.
+* The plug-in version for Maya 2025 and earlier remains at 1.2.0. The only difference between both versions is to prevent Maya 2026 and later to issue a normalization warning during the smoothing process.
+
+**1.2.0 (2024-06-04)**
+* Added support for Maya 2025.
+
 **1.2.0 (2023-06-12)**
 * Added support for Maya 2024.
 

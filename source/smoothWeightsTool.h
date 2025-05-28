@@ -13,8 +13,8 @@
 
 #include <iostream>
 #include <vector>
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
+#include <oneapi/tbb/parallel_for.h>
+#include <oneapi/tbb/blocked_range.h>
 
 #include <maya/MArgDatabase.h>
 #include <maya/MArgList.h>
@@ -232,6 +232,8 @@ public:
     bool oppositeBoundaryIndex(MPoint point, MIntArray faces, MIntArray edges, int &index);
     bool getClosestFace(MPoint point, MIntArray faces, int &index);
     double averageEdgeLength(MIntArray edges);
+    
+    MStatus setNormalizeWeights(MObject skinCluster, int value, int &prevState);
 
     void setInViewMessage(bool display);
 
@@ -379,6 +381,7 @@ private:
     bool maintainMaxInfluences;
     unsigned int maxInfluences;
     bool normalize;
+    int normalizeState;
 
     MDoubleArray currentWeights;    // The array holding all weights.
                                     // Unsmoothed and smoothed weights
